@@ -10,7 +10,7 @@
 
     <style>
       :root {
-        --bg:  #003f33;
+        --bg: #003f33;
         --card: #1e293b;
         --primary: #22c55e;
         --danger: #ef4444;
@@ -137,7 +137,7 @@
       }
 
       .app-header {
-        background: linear-gradient(135deg,  #003f33, #005c46);
+        background: linear-gradient(135deg, #003f33, #005c46);
         padding: 12px 20px;
         position: sticky;
         top: 0;
@@ -169,6 +169,14 @@
         border: 2px solid #b45309;
         color: #000;
         font-weight: bold;
+      }
+
+      .seat.mine {
+        background: #3b82f6; /* biru */
+        color: white;
+        border: 2px solid #1d4ed8;
+        font-weight: bold;
+        cursor: not-allowed;
       }
 
       @media (max-width: 480px) {
@@ -229,7 +237,7 @@
 
     <script>
       const WEBAPP_URL =
-        "https://script.google.com/macros/s/AKfycbzYGIxcf150_k2874GkXzVW6j71Ne28--9PbIYxTpGrKcGM6GZt2YosoiPcTecLm3Qu/exec";
+        "https://script.google.com/macros/s/AKfycbw8X8JhBfjfvNgWBE0QnlNdodmkWTqp_gaNJa2pTLh-pQ0dcqUjri3MJWcarBTsWdI5/exec";
 
       let userData = null;
       let selectedSeats = [];
@@ -341,7 +349,16 @@
 
             // BOOKED CHECK
             if (booked[seatCode]) {
-              seat.classList.add("booked");
+              // kursi sudah dibooking
+              if (booked[seatCode].username === userData.username) {
+                // ⭐ kursi milik user sendiri
+                seat.classList.add("mine");
+                seat.title = "Kursi kamu: " + seatCode;
+              } else {
+                // kursi milik orang lain
+                seat.classList.add("booked");
+                seat.title = "Sudah dibooking";
+              }
             } else {
               seat.onclick = () => toggleSeat(seatCode, seat);
             }
