@@ -93,5 +93,6 @@ const WEBAPP_URL = "https://script.google.com/macros/s/XXXXX/exec";
 
 ---
 ## Demo
-
-
+```js
+https://naozuru.github.io/SeatBooking/
+```
