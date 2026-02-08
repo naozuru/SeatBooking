@@ -85,7 +85,7 @@
 
     <script>
       const WEBAPP_URL =
-        "https://script.google.com/macros/s/AKfycbw8X8JhBfjfvNgWBE0QnlNdodmkWTqp_gaNJa2pTLh-pQ0dcqUjri3MJWcarBTsWdI5/exec";
+        "https://script.google.com/macros/s/AKfycbz0IbXzXbuugU_238BWgc4TokK-00ARL4DezOHVYxWJUCERVemzpc8-aXKv6wiud4PS/exec";
 
       let userData = null;
       let selectedSeats = [];
@@ -186,13 +186,10 @@
         config = await res.json();
       }
 
-      function isVIP(rowLabel, colNumber) {
-        if (!config.VIP_ROWS || !config.VIP_COLUMNS) return false;
-        return (
-          config.VIP_ROWS.includes(rowLabel) &&
-          config.VIP_COLUMNS.includes(colNumber)
-        );
-      }
+      function isVIP(seatCode) {
+  if (!config.VIP_LIST) return false;
+  return config.VIP_LIST.includes(seatCode);
+}
 
       /* LOAD SEATS */
       async function loadSeats() {
@@ -245,11 +242,11 @@
       seat.innerText = seatCode;
 
       // ⭐ VIP
-      if (isVIP(rowLetter, realCol)) {
-        seat.classList.add("vip");
-        seat.innerText = "⭐";
-        seat.title = seatCode + " (VIP)";
-      }
+      if (isVIP(seatCode)) {
+  seat.classList.add("vip");
+  seat.innerText = "⭐";
+  seat.title = seatCode + " (VIP)";
+}
 
       // 🔒 BOOKED
       if (booked[seatCode]) {
