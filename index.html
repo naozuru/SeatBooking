@@ -187,84 +187,83 @@
       }
 
       function isVIP(seatCode) {
-  if (!config.VIP_LIST) return false;
-  return config.VIP_LIST.includes(seatCode);
-}
+        if (!config.VIP_LIST) return false;
+        return config.VIP_LIST.includes(seatCode);
+      }
 
       /* LOAD SEATS */
       async function loadSeats() {
-  const res = await fetch(WEBAPP_URL, {
-    method: "POST",
-    body: JSON.stringify({ action: "seatmap" }),
-  });
+        const res = await fetch(WEBAPP_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "seatmap" }),
+        });
 
-  const booked = await res.json();
-  const seatMap = document.getElementById("seatMap");
-  const rowLabels = document.getElementById("rowLabels");
+        const booked = await res.json();
+        const seatMap = document.getElementById("seatMap");
+        const rowLabels = document.getElementById("rowLabels");
 
-  const rows = parseInt(config.ROWS);
-  const cols = parseInt(config.COLUMNS);
-  const aisle = parseInt(config.AISLE_COLUMN);
+        const rows = parseInt(config.ROWS);
+        const cols = parseInt(config.COLUMNS);
+        const aisle = parseInt(config.AISLE_COLUMN);
 
-  const totalCols = cols + 1; // ✅ TAMBAH 1 UNTUK AISLE
+        const totalCols = cols + 1; // ✅ TAMBAH 1 UNTUK AISLE
 
-  seatMap.innerHTML = "";
-  rowLabels.innerHTML = "";
+        seatMap.innerHTML = "";
+        rowLabels.innerHTML = "";
 
-  // ✅ GRID SUDAH BENAR
-  seatMap.style.gridTemplateColumns = `repeat(${totalCols}, 44px)`;
+        // ✅ GRID SUDAH BENAR
+        seatMap.style.gridTemplateColumns = `repeat(${totalCols}, 44px)`;
 
-  for (let r = 0; r < rows; r++) {
-    const rowLetter = String.fromCharCode(65 + r);
+        for (let r = 0; r < rows; r++) {
+          const rowLetter = String.fromCharCode(65 + r);
 
-    // ROW LABEL
-    const lbl = document.createElement("div");
-    lbl.className = "row-label";
-    lbl.innerText = rowLetter;
-    rowLabels.appendChild(lbl);
+          // ROW LABEL
+          const lbl = document.createElement("div");
+          lbl.className = "row-label";
+          lbl.innerText = rowLetter;
+          rowLabels.appendChild(lbl);
 
-    for (let c = 1; c <= totalCols; c++) {
+          for (let c = 1; c <= totalCols; c++) {
+            // ✅ AISLE TIDAK MENGURANGI JUMLAH KURSI
+            if (c === aisle) {
+              const aisleEl = document.createElement("div");
+              aisleEl.className = "aisle";
+              seatMap.appendChild(aisleEl);
+              continue;
+            }
 
-      // ✅ AISLE TIDAK MENGURANGI JUMLAH KURSI
-      if (c === aisle) {
-        const aisleEl = document.createElement("div");
-        aisleEl.className = "aisle";
-        seatMap.appendChild(aisleEl);
-        continue;
-      }
+            // ✅ REAL KOLOM KURSI
+            const realCol = c > aisle ? c - 1 : c;
+            const seatCode = rowLetter + realCol;
 
-      // ✅ REAL KOLOM KURSI
-      const realCol = c > aisle ? c - 1 : c;
-      const seatCode = rowLetter + realCol;
+            const seat = document.createElement("div");
+            seat.className = "seat";
+            seat.innerText = seatCode;
 
-      const seat = document.createElement("div");
-      seat.className = "seat";
-      seat.innerText = seatCode;
+            // ⭐ VIP
+            if (isVIP(seatCode)) {
+              seat.classList.add("vip");
+              seat.innerText = "⭐";
+              seat.title = seatCode + " (VIP)";
+            }
 
-      // ⭐ VIP
-      if (isVIP(seatCode)) {
-  seat.classList.add("vip");
-  seat.innerText = "⭐";
-  seat.title = seatCode + " (VIP)";
-}
+            // 🔒 BOOKED
+            if (booked[seatCode]) {
+              if (booked[seatCode].username === userData.username) {
+                seat.classList.add("mine");
+                seat.title = "Kursi kamu";
+              } else {
+                seat.classList.add("booked");
+                seat.title = "Sudah dibooking";
+              }
+            } else {
+              seat.onclick = () => toggleSeat(seatCode, seat);
+            }
 
-      // 🔒 BOOKED
-      if (booked[seatCode]) {
-        if (booked[seatCode].username === userData.username) {
-          seat.classList.add("mine");
-          seat.title = "Kursi kamu";
-        } else {
-          seat.classList.add("booked");
-          seat.title = "Sudah dibooking";
+            seatMap.appendChild(seat);
+          }
         }
-      } else {
-        seat.onclick = () => toggleSeat(seatCode, seat);
       }
-
-      seatMap.appendChild(seat);
-    }
-  }
-}
 
       /* TOGGLE */
       function toggleSeat(code, el) {
