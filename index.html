@@ -8,183 +8,7 @@
     <title>Tunas Mekar Indonesia | Theater Seat Booking</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <style>
-      :root {
-        --bg: #003f33;
-        --card: #1e293b;
-        --primary: #22c55e;
-        --danger: #ef4444;
-        --seat: #334155;
-        --selected: #f59e0b;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        font-family: system-ui, sans-serif;
-        background: var(--bg);
-        color: #fff;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-
-      /* HEADER */
-      header {
-        background: #020617;
-        padding: 14px 20px;
-        text-align: center;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-      }
-
-      /* FOOTER */
-      footer {
-        margin-top: auto;
-        background: #020617;
-        padding: 10px;
-        text-align: center;
-        font-size: 13px;
-        opacity: 0.8;
-      }
-
-      /* CARD */
-      .box {
-        max-width: 900px;
-        margin: 20px auto;
-        background: var(--card);
-        padding: 20px;
-        border-radius: 12px;
-      }
-
-      input,
-      select,
-      button {
-        width: 100%;
-        padding: 12px;
-        margin-top: 10px;
-        border-radius: 8px;
-        border: none;
-      }
-
-      button {
-        background: var(--primary);
-        color: #000;
-        font-weight: bold;
-        cursor: pointer;
-      }
-
-      button:hover {
-        opacity: 0.9;
-      }
-
-      #seatBox {
-        display: none;
-      }
-
-      /* SEAT MAP */
-      .seat-map-wrapper {
-        overflow-x: auto;
-        padding: 10px 0;
-      }
-
-      .seat-map {
-        display: grid;
-        gap: 8px;
-        justify-content: center;
-        margin: auto;
-      }
-
-      .seat {
-        width: 44px;
-        height: 44px;
-        background: var(--seat);
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        cursor: pointer;
-        user-select: none;
-      }
-
-      .seat.booked {
-        background: var(--danger);
-        cursor: not-allowed;
-      }
-
-      .seat.selected {
-        background: var(--selected);
-      }
-
-      .aisle {
-        width: 44px;
-        height: 44px;
-        background: transparent;
-      }
-
-      .stage {
-        background: linear-gradient(135deg, #334155, #1e293b);
-        text-align: center;
-        padding: 14px;
-        border-radius: 10px;
-        margin: 15px 0 20px;
-        font-weight: bold;
-        letter-spacing: 1px;
-      }
-
-      .app-header {
-        background: linear-gradient(135deg, #003f33, #005c46);
-        padding: 12px 20px;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        border-bottom: 2px solid #facc15;
-      }
-
-      .header-left {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .logo {
-        width: 34px;
-        height: 34px;
-        object-fit: contain;
-      }
-
-      .title {
-        font-size: 18px;
-        font-weight: 600;
-        white-space: nowrap;
-      }
-
-      .seat.vip {
-        background: linear-gradient(135deg, #facc15, #eab308);
-        border: 2px solid #b45309;
-        color: #000;
-        font-weight: bold;
-      }
-
-      .seat.mine {
-        background: #3b82f6; /* biru */
-        color: white;
-        border: 2px solid #1d4ed8;
-        font-weight: bold;
-        cursor: not-allowed;
-      }
-
-      @media (max-width: 480px) {
-        .title {
-          font-size: 14px;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
 
   <body>
@@ -200,21 +24,35 @@
     </header>
 
     <!-- LOGIN -->
-    <div id="loginBox" class="box">
-      <h2>Login</h2>
+    <div id="loginBox" class="login-wrapper">
+      <div class="login-card">
+        <img src="assets/logo_gold.png" class="login-logo" alt="Logo" />
 
-      <select id="level">
-        <option value="">-- Pilih Level --</option>
-        <option value="ECC">ECC</option>
-        <option value="ES">ES</option>
-        <option value="JHS">JHS</option>
-        <option value="SHS">SHS</option>
-      </select>
+        <h2>Login Sistem</h2>
+        <p class="login-sub">Theater Seat Booking System</p>
 
-      <input id="username" placeholder="Username" />
-      <input id="password" type="password" placeholder="Password" />
+        <select id="level">
+          <option value="">Pilih Level</option>
+          <option value="ECC">ECC</option>
+          <option value="ES">ES</option>
+          <option value="JHS">JHS</option>
+          <option value="SHS">SHS</option>
+        </select>
 
-      <button onclick="login()">Login</button>
+        <input id="username" placeholder="Username" />
+        <div class="password-wrapper">
+          <input id="password" type="password" placeholder="Password" />
+          <span class="toggle-password" onclick="togglePassword()">👁️</span>
+        </div>
+
+        <button id="loginBtn" onclick="login()">
+          <span class="btn-text">Masuk</span>
+          <span class="spinner"></span>
+        </button>
+        <div id="loginError" class="login-error"></div>
+
+        <div class="login-footer">© 2026 Tunas Mekar Indonesia</div>
+      </div>
     </div>
 
     <!-- SEAT -->
@@ -225,8 +63,18 @@
       <!-- STAGE -->
       <div class="stage">🎤 STAGE / PODIUM</div>
 
+      <!-- LEGEND -->
+      <div class="legend">
+        <div><span class="seat"></span> Kosong</div>
+        <div><span class="seat selected"></span> Dipilih</div>
+        <div><span class="seat vip"></span> VIP</div>
+        <div><span class="seat mine"></span> Kursi Saya</div>
+        <div><span class="seat booked"></span> Terisi</div>
+      </div>
+
       <!-- SEAT MAP -->
       <div class="seat-map-wrapper">
+        <div class="row-labels" id="rowLabels"></div>
         <div id="seatMap" class="seat-map"></div>
       </div>
 
@@ -243,49 +91,90 @@
       let selectedSeats = [];
       let config = {};
 
+      // Password Hide
+      function togglePassword() {
+        const pwd = document.getElementById("password");
+        pwd.type = pwd.type === "password" ? "text" : "password";
+      }
+
+      // Login error
+      function showError(msg) {
+        document.getElementById("loginError").innerText = msg;
+      }
+
+      function clearError() {
+        document.getElementById("loginError").innerText = "";
+      }
+
+      // Animasi Fade
+      function animateOutLogin() {
+        document.querySelector(".login-card").classList.add("fade-out");
+      }
+
       /* LOGIN */
       async function login() {
+        clearError(); // hapus error lama
+
         const levelEl = document.getElementById("level");
         const usernameEl = document.getElementById("username");
         const passwordEl = document.getElementById("password");
+        const btn = document.getElementById("loginBtn");
 
         const level = levelEl.value;
         const username = usernameEl.value.trim();
         const password = passwordEl.value.trim();
 
+        // VALIDASI
         if (!level || !username || !password) {
-          alert("Level, username, dan password wajib diisi");
+          showError("Level, username, dan password wajib diisi");
           return;
         }
 
-        const res = await fetch(WEBAPP_URL, {
-          method: "POST",
-          body: JSON.stringify({
-            action: "login",
-            level,
-            username,
-            password,
-          }),
-        });
+        // LOADING
+        btn.classList.add("loading");
+        btn.disabled = true;
 
-        const data = await res.json();
+        try {
+          const res = await fetch(WEBAPP_URL, {
+            method: "POST",
+            body: JSON.stringify({
+              action: "login",
+              level,
+              username,
+              password,
+            }),
+          });
 
-        if (!data.success) {
-          alert(data.message || "Login gagal");
-          return;
+          const data = await res.json();
+
+          if (!data.success) {
+            showError(data.message || "Login gagal");
+            return;
+          }
+
+          // SIMPAN USER
+          userData = data;
+
+          // ANIMASI KELUAR LOGIN
+          document.getElementById("loginBox").classList.add("fade-out");
+
+          setTimeout(async () => {
+            document.getElementById("loginBox").style.display = "none";
+            document.getElementById("seatBox").style.display = "block";
+
+            document.getElementById(
+              "userInfo"
+            ).innerText = `${data.fullname} | Max Seat: ${data.max_seat}`;
+
+            await loadConfig();
+            loadSeats();
+          }, 400);
+        } catch (err) {
+          showError("Koneksi ke server bermasalah");
+        } finally {
+          btn.classList.remove("loading");
+          btn.disabled = false;
         }
-
-        userData = data;
-
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("seatBox").style.display = "block";
-
-        document.getElementById(
-          "userInfo"
-        ).innerText = `${data.fullname} | Max Seat: ${data.max_seat}`;
-
-        await loadConfig();
-        loadSeats();
       }
 
       /* LOAD CONFIG */
@@ -307,66 +196,78 @@
 
       /* LOAD SEATS */
       async function loadSeats() {
-        const res = await fetch(WEBAPP_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "seatmap" }),
-        });
+  const res = await fetch(WEBAPP_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "seatmap" }),
+  });
 
-        const booked = await res.json();
-        const seatMap = document.getElementById("seatMap");
+  const booked = await res.json();
+  const seatMap = document.getElementById("seatMap");
+  const rowLabels = document.getElementById("rowLabels");
 
-        const rows = parseInt(config.ROWS);
-        const cols = parseInt(config.COLUMNS);
-        const aisle = parseInt(config.AISLE_COLUMN);
+  const rows = parseInt(config.ROWS);
+  const cols = parseInt(config.COLUMNS);
+  const aisle = parseInt(config.AISLE_COLUMN);
 
-        seatMap.style.gridTemplateColumns = `repeat(${cols}, 44px)`;
-        seatMap.innerHTML = "";
+  const totalCols = cols + 1; // ✅ TAMBAH 1 UNTUK AISLE
 
-        for (let r = 0; r < rows; r++) {
-          const rowLetter = String.fromCharCode(65 + r);
+  seatMap.innerHTML = "";
+  rowLabels.innerHTML = "";
 
-          for (let c = 1; c <= cols; c++) {
-            if (c === aisle) {
-              const aisleEl = document.createElement("div");
-              aisleEl.className = "aisle";
-              seatMap.appendChild(aisleEl);
-              continue;
-            }
+  // ✅ GRID SUDAH BENAR
+  seatMap.style.gridTemplateColumns = `repeat(${totalCols}, 44px)`;
 
-            const realCol = c > aisle ? c - 1 : c;
-            const seatCode = rowLetter + realCol;
+  for (let r = 0; r < rows; r++) {
+    const rowLetter = String.fromCharCode(65 + r);
 
-            const seat = document.createElement("div");
-            seat.className = "seat";
-            seat.innerText = seatCode;
+    // ROW LABEL
+    const lbl = document.createElement("div");
+    lbl.className = "row-label";
+    lbl.innerText = rowLetter;
+    rowLabels.appendChild(lbl);
 
-            // ⭐ VIP CHECK
-            if (isVIP(rowLetter, realCol)) {
-              seat.classList.add("vip");
-              seat.innerText = "⭐";
-              seat.title = seatCode + " (VIP)";
-            }
+    for (let c = 1; c <= totalCols; c++) {
 
-            // BOOKED CHECK
-            if (booked[seatCode]) {
-              // kursi sudah dibooking
-              if (booked[seatCode].username === userData.username) {
-                // ⭐ kursi milik user sendiri
-                seat.classList.add("mine");
-                seat.title = "Kursi kamu: " + seatCode;
-              } else {
-                // kursi milik orang lain
-                seat.classList.add("booked");
-                seat.title = "Sudah dibooking";
-              }
-            } else {
-              seat.onclick = () => toggleSeat(seatCode, seat);
-            }
-
-            seatMap.appendChild(seat);
-          }
-        }
+      // ✅ AISLE TIDAK MENGURANGI JUMLAH KURSI
+      if (c === aisle) {
+        const aisleEl = document.createElement("div");
+        aisleEl.className = "aisle";
+        seatMap.appendChild(aisleEl);
+        continue;
       }
+
+      // ✅ REAL KOLOM KURSI
+      const realCol = c > aisle ? c - 1 : c;
+      const seatCode = rowLetter + realCol;
+
+      const seat = document.createElement("div");
+      seat.className = "seat";
+      seat.innerText = seatCode;
+
+      // ⭐ VIP
+      if (isVIP(rowLetter, realCol)) {
+        seat.classList.add("vip");
+        seat.innerText = "⭐";
+        seat.title = seatCode + " (VIP)";
+      }
+
+      // 🔒 BOOKED
+      if (booked[seatCode]) {
+        if (booked[seatCode].username === userData.username) {
+          seat.classList.add("mine");
+          seat.title = "Kursi kamu";
+        } else {
+          seat.classList.add("booked");
+          seat.title = "Sudah dibooking";
+        }
+      } else {
+        seat.onclick = () => toggleSeat(seatCode, seat);
+      }
+
+      seatMap.appendChild(seat);
+    }
+  }
+}
 
       /* TOGGLE */
       function toggleSeat(code, el) {
