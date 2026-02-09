@@ -85,7 +85,7 @@
 
     <script>
       const WEBAPP_URL =
-        "https://script.google.com/macros/s/AKfycbz0IbXzXbuugU_238BWgc4TokK-00ARL4DezOHVYxWJUCERVemzpc8-aXKv6wiud4PS/exec";
+        "https://script.google.com/macros/s/AKfycbzsF9GJF7XkXVPy0-6Std1eNKbpa-VhY7K_Z969Ut2dX6LptTL-o6ulHzY6RtrBv7K_/exec";
 
       let userData = null;
       let selectedSeats = [];
@@ -206,25 +206,23 @@
         const cols = parseInt(config.COLUMNS);
         const aisle = parseInt(config.AISLE_COLUMN);
 
-        const totalCols = cols + 1; // ✅ TAMBAH 1 UNTUK AISLE
+        const totalCols = cols + 1;
 
         seatMap.innerHTML = "";
         rowLabels.innerHTML = "";
 
-        // ✅ GRID SUDAH BENAR
         seatMap.style.gridTemplateColumns = `repeat(${totalCols}, 44px)`;
 
         for (let r = 0; r < rows; r++) {
           const rowLetter = String.fromCharCode(65 + r);
 
-          // ROW LABEL
           const lbl = document.createElement("div");
           lbl.className = "row-label";
           lbl.innerText = rowLetter;
           rowLabels.appendChild(lbl);
 
           for (let c = 1; c <= totalCols; c++) {
-            // ✅ AISLE TIDAK MENGURANGI JUMLAH KURSI
+            // AISLE
             if (c === aisle) {
               const aisleEl = document.createElement("div");
               aisleEl.className = "aisle";
@@ -232,7 +230,6 @@
               continue;
             }
 
-            // ✅ REAL KOLOM KURSI
             const realCol = c > aisle ? c - 1 : c;
             const seatCode = rowLetter + realCol;
 
@@ -240,23 +237,29 @@
             seat.className = "seat";
             seat.innerText = seatCode;
 
-            // ⭐ VIP
+            // ⭐ VIP — PALING ATAS & FINAL
             if (isVIP(seatCode)) {
               seat.classList.add("vip");
               seat.innerText = "⭐";
               seat.title = seatCode + " (VIP)";
+              seat.style.cursor = "not-allowed";
+              seat.style.pointerEvents = "none";
             }
 
             // 🔒 BOOKED
-            if (booked[seatCode]) {
+            else if (booked[seatCode]) {
               if (booked[seatCode].username === userData.username) {
                 seat.classList.add("mine");
-                seat.title = "Kursi kamu";
+                seat.title = "Your Seat";
               } else {
                 seat.classList.add("booked");
-                seat.title = "Sudah dibooking";
+                seat.innerText = "✖";
+                seat.title = seatCode + " (Booked)";
               }
-            } else {
+            }
+
+            // ✅ NORMAL
+            else {
               seat.onclick = () => toggleSeat(seatCode, seat);
             }
 

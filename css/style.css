@@ -327,6 +327,9 @@ button:hover {
   border: 2px solid #b45309;
   color: #000;
   font-weight: bold;
+  pointer-events: none; /* ⛔ pengaman ekstra */
+  opacity: 0.9;
+  cursor: not-allowed;
 }
 
 /* ===== ANIMATION ===== */
